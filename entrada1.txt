@@ -1,0 +1,9 @@
+8 8
+ola
+adeus
+teste
+sol
+lua
+mesa
+cadeira
+mochila

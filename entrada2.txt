@@ -1,0 +1,8 @@
+7 6
+um
+dois
+tres
+quatro
+cinco
+seis
+sete
