@@ -27,7 +27,7 @@ class PuzzleWordsLookup:
         self.words = words
         self.puzzle = puzzle
 
-    def resolve(self) -> List[PuzzleWord]:
+    def resolve(self) -> List[Optional[PuzzleWord]]:
         words_in_puzzle = []
         for word in self.words:
             words_in_puzzle.append(self.look_for_word(word))
