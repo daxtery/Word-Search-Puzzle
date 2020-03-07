@@ -1,6 +1,14 @@
-from puzzle import PuzzleConstructor
-from search import PuzzleWordsLookup, words_looking_for
+import sys
 
-nome = '2tempo.txt'  # input('nome do ficheiro(com extensão)')
-puzzle = PuzzleConstructor.construct(nome)
-print(PuzzleWordsLookup(words_looking_for(nome), puzzle).resolve())
+from generate import PuzzleGeneratorConfigConstructor, PuzzleConstructorFromConfig
+from search import PuzzleWordsLookup
+
+config = PuzzleGeneratorConfigConstructor.from_file(sys.argv[1])
+puzzle = PuzzleConstructorFromConfig.construct_from_config(config)
+assert puzzle, \
+    f"Failed to create a puzzle with " \
+    f"{config.rows} * {config.columns}, words: {config.words}, orientations: {config.orientations}"
+words_list = '\n'.join([word for word in config.words])
+print(words_list)
+print(puzzle)
+print(PuzzleWordsLookup(config.words, puzzle).resolve())
