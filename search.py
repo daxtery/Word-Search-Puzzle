@@ -84,3 +84,12 @@ class PuzzleWordsLookup:
             current_index += 1
 
         return current_position
+
+
+if __name__ == "__main__":
+    puzzle = PuzzleConstructorFromFile.construct(sys.argv[1])
+    words = read_words_looking_for_from_file(sys.argv[1])
+    words_list = '\n'.join([word for word in words])
+    print(words_list)
+    print(puzzle)
+    print(PuzzleWordsLookup(words, puzzle).resolve())
