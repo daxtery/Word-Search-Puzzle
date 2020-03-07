@@ -2,7 +2,7 @@ from typing import List
 
 
 class Puzzle:
-    def __init__(self, rows: List[List[str]]):
+    def __init__(self, rows: List[str]):
         self.rows = rows
 
     def get(self, row: int, column: int) -> str:
