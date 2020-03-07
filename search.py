@@ -1,37 +1,13 @@
+import sys
 from typing import List, Tuple, Optional
-from enum import Enum
 
 from puzzle import Puzzle
-
-
-def words_looking_for(path: str) -> List[str]:
-    with open(path, 'r') as file:
-        number_of_lines = int(file.readline())
-        words = []
-        for i in range(number_of_lines):
-            words.append(file.readline().rstrip().upper())
-        return words
-
-
-class Orientation(Enum):
-    Horizontal = 1
-    Vertical = 2
-    Diagonal = 3
-    AntiDiagonal = 4
-
-    def get_vector(self) -> Tuple[int, int]:
-        if self.name == self.Vertical.name:
-            return 1, 0
-        elif self.name == self.Horizontal.name:
-            return 0, 1
-        elif self.name == self.Diagonal.name:
-            return 1, 1
-        else:
-            return -1, 1
+from util import Orientation, PuzzleConstructorFromFile, read_words_looking_for_from_file
 
 
 class PuzzleWord:
-    def __init__(self, word: str, orientation: Orientation, is_inverted: bool, start: Tuple[int, int], end: Tuple[int, int]):
+    def __init__(self, word: str, orientation: Orientation, is_inverted: bool, start: Tuple[int, int],
+                 end: Tuple[int, int]):
         self.word = word
         self.is_inverted = is_inverted
         self.end = end
