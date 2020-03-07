@@ -9,4 +9,5 @@ class Puzzle:
         return self.rows[row][column]
 
     def in_bounds(self, row: int, column: int) -> bool:
-        return 0 < row < len(self.rows) and 0 < column < len(self.rows[0])
+        return 0 <= row < len(self.rows) and 0 <= column < len(self.rows[row])
+
