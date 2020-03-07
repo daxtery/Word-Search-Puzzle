@@ -17,19 +17,14 @@ class Puzzle:
     def __copy__(self):
         return Puzzle(self.rows.copy())
 
-class PuzzleConstructor:
-    @staticmethod
-    def construct(path: str) -> Puzzle:
-        with open(path, 'r') as file:
-            number_of_lines = int(file.readline())
-            # skip the next lines because they have the words we are looking for
-            # which we do not care about
-            for i in range(number_of_lines):
-                file.readline()
-            lines: List[str] = []
-            while True:
-                line = file.readline()
-                if line == "":
-                    break
-                lines.append(line)
-            return Puzzle(lines)
+    def __str__(self):
+        parts = []
+        for row in self.rows:
+            line = []
+            for c in row:
+                line.append(c)
+            parts.append(' '.join(line))
+        return '\n'.join(parts)
+
+    def __repr__(self):
+        return self.__str__()
