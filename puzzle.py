@@ -14,6 +14,8 @@ class Puzzle:
     def in_bounds(self, row: int, column: int) -> bool:
         return 0 <= row < len(self.rows) and 0 <= column < len(self.rows[row])
 
+    def __copy__(self):
+        return Puzzle(self.rows.copy())
 
 class PuzzleConstructor:
     @staticmethod
