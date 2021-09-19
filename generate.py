@@ -7,7 +7,7 @@ from puzzle import Puzzle
 from util import Orientation
 
 
-class PuzzleGeneratorConfig(object):
+class PuzzleGeneratorConfig:
     def __init__(self, rows: int, columns: int, words: List[str], orientations: List[Orientation]):
         self.orientations = orientations
         self.words = words
@@ -15,7 +15,7 @@ class PuzzleGeneratorConfig(object):
         self.rows = rows
 
 
-class PuzzleGeneratorConfigConstructor(object):
+class PuzzleGeneratorConfigConstructor:
     @staticmethod
     def from_file(path: str) -> PuzzleGeneratorConfig:
         with open(path, 'r') as file:
@@ -32,7 +32,7 @@ class PuzzleGeneratorConfigConstructor(object):
             return PuzzleGeneratorConfig(rows, columns, words, [o for o in Orientation])
 
 
-class PuzzleConstructorFromConfig(object):
+class PuzzleConstructorFromConfig:
     @staticmethod
     def construct_from_config(config: PuzzleGeneratorConfig) -> Optional[Puzzle]:
         rows: List[List[str]] = []
@@ -48,8 +48,8 @@ class PuzzleConstructorFromConfig(object):
 
         for i in range(len(puzzle_with_words.rows)):
             for j in range(config.columns):
-                if puzzle_with_words.get(i, j) == " ":
-                    puzzle_with_words.rows[i][j] = random.choice(string.ascii_uppercase)
+                if puzzle_with_words[(i, j)] == " ":
+                    puzzle_with_words[i, j] = random.choice(string.ascii_uppercase)
 
         return puzzle_with_words
 
@@ -114,10 +114,10 @@ class PuzzleConstructorFromConfig(object):
 
         for i in range(len(word)):
             current_location = (location[0] + i * change_vector[0], location[1] + i * change_vector[1])
-            if not puzzle.in_bounds(current_location[0], current_location[1]):
+            if not puzzle.in_bounds(current_location):
                 return False
-            if puzzle.get(current_location[0], current_location[1]) != " " and \
-                    puzzle.get(current_location[0], current_location[1]) != word[i]:
+            if puzzle[current_location] != " " and \
+                    puzzle[current_location] != word[i]:
                 return False
 
         return True
@@ -133,7 +133,7 @@ class PuzzleConstructorFromConfig(object):
 
         for i in range(len(word)):
             current_location = (location[0] + i * change_vector[0], location[1] + i * change_vector[1])
-            puzzle.set(word[i], current_location[0], current_location[1])
+            puzzle[current_location] = word[i]
 
         return new_puzzle
 

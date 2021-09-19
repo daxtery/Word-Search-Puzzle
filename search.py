@@ -14,12 +14,9 @@ class PuzzleWord:
         self.start = start
         self.orientation = orientation
 
-    def __str__(self):
+    def __repr__(self):
         inverted = "(Inverted)" if self.is_inverted else ""
         return f"{self.word} {self.start} -[{self.orientation}{inverted}]-> {self.end}"
-
-    def __repr__(self):
-        return str(self)
 
 
 class PuzzleWordsLookup:
@@ -36,7 +33,7 @@ class PuzzleWordsLookup:
     def look_for_word(self, word: str) -> Optional[PuzzleWord]:
         for row_index in range(len(self.puzzle.rows)):
             for letter_index in range(len(self.puzzle.rows[row_index])):
-                if self.puzzle.get(row_index, letter_index) == word[0]:
+                if self.puzzle[(row_index, letter_index)] == word[0]:
                     for orientation in Orientation:
                         # look in the "normal way": for example:
                         # looking in Horizontal in the "normal" way means
@@ -72,10 +69,10 @@ class PuzzleWordsLookup:
         while current_index < len(word):
             current_position = start[0] + current_index * change_vector[0], start[1] + current_index * change_vector[1]
 
-            if not self.puzzle.in_bounds(current_position[0], current_position[1]):
+            if not self.puzzle.in_bounds(current_position):
                 return None
 
-            car = self.puzzle.get(current_position[0], current_position[1])
+            car = self.puzzle[current_position]
             # print(current_position, "character", car, "index", current_index, "word[index]", word[current_index])
 
             if car != word[current_index]:
