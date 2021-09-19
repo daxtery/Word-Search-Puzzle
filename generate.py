@@ -6,13 +6,14 @@ from typing import List, Optional, Dict, Tuple
 from puzzle import Puzzle
 from orientation import Orientation, inverted_orientation_vector
 
+from dataclasses import dataclass
 
+@dataclass
 class PuzzleGeneratorConfig:
-    def __init__(self, rows: int, columns: int, words: List[str], orientations: List[Orientation]):
-        self.orientations = orientations
-        self.words = words
-        self.columns = columns
-        self.rows = rows
+    rows: int
+    columns: int
+    words: List[str]
+    orientations: List[Orientation]
 
 
 class PuzzleGeneratorConfigConstructor:
