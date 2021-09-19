@@ -4,7 +4,7 @@ import sys
 from typing import List, Optional, Dict, Tuple
 
 from puzzle import Puzzle
-from orientation import Orientation
+from orientation import Orientation, inverted_orientation_vector
 
 
 class PuzzleGeneratorConfig:
@@ -108,9 +108,8 @@ class PuzzleConstructorFromConfig:
     def _possible_with_location_and_orientation(word: str, puzzle: Puzzle, location: Tuple[int, int],
                                                 orientation: Orientation,
                                                 inverted: bool) -> bool:
-        change_vector = orientation.get_vector()
-        if inverted:
-            change_vector = -change_vector[0], -change_vector[1]
+
+        change_vector = inverted_orientation_vector(orientation) if inverted else orientation.value
 
         for i in range(len(word)):
             current_location = (location[0] + i * change_vector[0], location[1] + i * change_vector[1])
@@ -125,10 +124,8 @@ class PuzzleConstructorFromConfig:
     @staticmethod
     def _add_word(word: str, puzzle: Puzzle, location: Tuple[int, int], orientation: Orientation,
                   inverted: bool) -> Puzzle:
-        change_vector = orientation.get_vector()
-        if inverted:
-            change_vector = -change_vector[0], -change_vector[1]
 
+        change_vector = inverted_orientation_vector(orientation) if inverted else orientation.value
         new_puzzle = puzzle.__copy__()
 
         for i in range(len(word)):

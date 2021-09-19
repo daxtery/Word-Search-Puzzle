@@ -3,17 +3,13 @@ from typing import Tuple
 
 
 class Orientation(Enum):
-    Horizontal = 1
-    Vertical = 2
-    Diagonal = 3
-    AntiDiagonal = 4
+    value: Tuple[int, int]
 
-    def get_vector(self) -> Tuple[int, int]:
-        if self.name == self.Vertical.name:
-            return 1, 0
-        elif self.name == self.Horizontal.name:
-            return 0, 1
-        elif self.name == self.Diagonal.name:
-            return 1, 1
-        else:
-            return -1, 1
+    Horizontal = (1, 0)
+    Vertical = (0, 1)
+    Diagonal = (1, 1)
+    AntiDiagonal = (-1, 1)
+
+
+def inverted_orientation_vector(orientation: Orientation):
+    return -orientation.value[0], -orientation.value[1]

@@ -2,7 +2,7 @@ import sys
 from typing import List, Tuple, Optional
 
 from puzzle import Puzzle, Cell
-from orientation import Orientation
+from orientation import Orientation, inverted_orientation_vector
 from util import puzzle_from_file, words_from_file
 
 class PuzzleWord:
@@ -54,9 +54,8 @@ class PuzzleWordsLookup:
 
     def look_for_word_with_orientation(self, word: str, start: Tuple[int, int], orientation: Orientation,
                                        inverted: bool) -> Optional[Tuple[int, int]]:
-        change_vector = orientation.get_vector()
-        if inverted:
-            change_vector = -change_vector[0], -change_vector[1]
+
+        change_vector = inverted_orientation_vector(orientation) if inverted else orientation.value
 
         current_index = 1
         current_position = 0, 0
