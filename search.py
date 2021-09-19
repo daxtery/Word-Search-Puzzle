@@ -3,8 +3,7 @@ from typing import List, Tuple, Optional
 
 from puzzle import Puzzle, Cell
 from orientation import Orientation
-from util import PuzzleConstructorFromFile, read_words_looking_for_from_file
-
+from util import puzzle_from_file, words_from_file
 
 class PuzzleWord:
     def __init__(self, word: str, orientation: Orientation, is_inverted: bool, start: Cell, end: Cell):
@@ -84,8 +83,8 @@ class PuzzleWordsLookup:
 
 
 if __name__ == "__main__":
-    puzzle = PuzzleConstructorFromFile.construct(sys.argv[1])
-    words = read_words_looking_for_from_file(sys.argv[1])
+    puzzle = puzzle_from_file(sys.argv[1])
+    words = words_from_file(sys.argv[1])
     words_list = '\n'.join([word for word in words])
     print(words_list)
     print(puzzle)
