@@ -4,7 +4,7 @@ import sys
 from typing import List, Optional, Dict, Tuple
 
 from puzzle import Puzzle
-from util import Orientation
+from orientation import Orientation
 
 
 class PuzzleGeneratorConfig:

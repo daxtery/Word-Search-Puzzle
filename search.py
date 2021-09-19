@@ -1,13 +1,13 @@
 import sys
 from typing import List, Tuple, Optional
 
-from puzzle import Puzzle
-from util import Orientation, PuzzleConstructorFromFile, read_words_looking_for_from_file
+from puzzle import Puzzle, Cell
+from orientation import Orientation
+from util import PuzzleConstructorFromFile, read_words_looking_for_from_file
 
 
 class PuzzleWord:
-    def __init__(self, word: str, orientation: Orientation, is_inverted: bool, start: Tuple[int, int],
-                 end: Tuple[int, int]):
+    def __init__(self, word: str, orientation: Orientation, is_inverted: bool, start: Cell, end: Cell):
         self.word = word
         self.is_inverted = is_inverted
         self.end = end
