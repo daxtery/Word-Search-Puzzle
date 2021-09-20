@@ -30,7 +30,7 @@ class PuzzleWordsLookup:
 
         return words_in_puzzle
 
-    def look_for_word(self, word: str) -> Optional[PuzzleWord]:
+    def look_for_word(self, word: str):
         for row_index in range(len(self.puzzle.rows)):
             for letter_index in range(len(self.puzzle.rows[row_index])):
                 if self.puzzle[(row_index, letter_index)] == word[0]:
@@ -61,16 +61,13 @@ class PuzzleWordsLookup:
                                 found,
                             )
 
-        return None
-
     def look_for_word_with_orientation(
         self,
         word: str,
         start: Tuple[int, int],
         orientation: Orientation,
         inverted: bool,
-    ) -> Optional[Tuple[int, int]]:
-
+    ):
         change_vector = (
             inverted_orientation_vector(orientation) if inverted else orientation.value
         )
