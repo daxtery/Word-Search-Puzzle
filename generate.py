@@ -33,8 +33,9 @@ def puzzle_generator_config_from_file(path: str):
 
 
 class PuzzleConstructorFromConfig:
-    def __init__(self, config: PuzzleGeneratorConfig) -> None:
+    def __init__(self, config: PuzzleGeneratorConfig, seed: int = 42):
         self.config = config
+        random.seed(seed)
 
     def construct(self):
 
