@@ -4,7 +4,7 @@ from generate import puzzle_generator_config_from_file, PuzzleConstructorFromCon
 from search import PuzzleWordsLookup
 
 config = puzzle_generator_config_from_file(sys.argv[1])
-puzzle = PuzzleConstructorFromConfig(config).construct()
+puzzle = PuzzleConstructorFromConfig(config).try_construct()
 assert puzzle, (
     f"Failed to create a puzzle with "
     f"{config.rows} * {config.columns}, words: {config.words}, orientations: {config.orientations}"

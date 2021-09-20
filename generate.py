@@ -40,7 +40,7 @@ class PuzzleConstructorFromConfig:
         self.config = config
         random.seed(seed)
 
-    def construct(self):
+    def try_construct(self):
 
         letters = [[" "] * self.config.columns for _ in range(self.config.rows)]
 
@@ -142,7 +142,7 @@ class PuzzleConstructorFromConfig:
 
 if __name__ == "__main__":
     config = puzzle_generator_config_from_file(sys.argv[1])
-    puzzle = PuzzleConstructorFromConfig(config).construct()
+    puzzle = PuzzleConstructorFromConfig(config).try_construct()
     assert puzzle, (
         f"Failed to create a puzzle with "
         f"{config.rows} * {config.columns}, words: {config.words}, orientations: {config.orientations}"
