@@ -29,5 +29,5 @@ class Puzzle:
             line = []
             for c in row:
                 line.append(c)
-            parts.append(' '.join(line))
-        return '\n'.join(parts)
+            parts.append(" ".join(line))
+        return "\n".join(parts)
