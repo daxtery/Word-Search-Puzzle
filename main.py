@@ -1,9 +1,9 @@
 import sys
 
-from generate import PuzzleGeneratorConfigConstructor, PuzzleConstructorFromConfig
+from generate import puzzle_generator_config_from_file, PuzzleConstructorFromConfig
 from search import PuzzleWordsLookup
 
-config = PuzzleGeneratorConfigConstructor.from_file(sys.argv[1])
+config = puzzle_generator_config_from_file(sys.argv[1])
 puzzle = PuzzleConstructorFromConfig.construct_from_config(config)
 assert puzzle, (
     f"Failed to create a puzzle with "

@@ -17,21 +17,19 @@ class PuzzleGeneratorConfig:
     orientations: List[Orientation]
 
 
-class PuzzleGeneratorConfigConstructor:
-    @staticmethod
-    def from_file(path: str) -> PuzzleGeneratorConfig:
-        with open(path, "r") as file:
+def puzzle_generator_config_from_file(path: str):
+    with open(path, "r") as file:
+        line = file.readline()
+        parts = line.split(" ")
+        rows = int(parts[0])
+        columns = int(parts[1])
+        words = []
+        while True:
             line = file.readline()
-            parts = line.split(" ")
-            rows = int(parts[0])
-            columns = int(parts[1])
-            words = []
-            while True:
-                line = file.readline()
-                if line == "":
-                    break
-                words.append(line.strip().upper())
-            return PuzzleGeneratorConfig(rows, columns, words, [o for o in Orientation])
+            if line == "":
+                break
+            words.append(line.strip().upper())
+        return PuzzleGeneratorConfig(rows, columns, words, [o for o in Orientation])
 
 
 class PuzzleConstructorFromConfig:
@@ -179,7 +177,7 @@ class PuzzleConstructorFromConfig:
 
 
 if __name__ == "__main__":
-    config = PuzzleGeneratorConfigConstructor.from_file(sys.argv[1])
+    config = puzzle_generator_config_from_file(sys.argv[1])
     puzzle = PuzzleConstructorFromConfig.construct_from_config(config)
     assert puzzle, (
         f"Failed to create a puzzle with "
