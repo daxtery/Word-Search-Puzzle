@@ -4,10 +4,11 @@ Row = int
 Column = int
 
 Cell = Tuple[Row, Column]
+Soup = List[List[str]]
 
 
 class Puzzle:
-    def __init__(self, rows: int, columns: int, letters: List[List[str]]):
+    def __init__(self, rows: int, columns: int, letters: Soup):
         self.letters = letters
         self.rows = rows
         self.columns = columns

@@ -3,7 +3,7 @@ import string
 import sys
 from typing import List, Optional, Dict, Tuple
 
-from puzzle import Puzzle
+from puzzle import Puzzle, Soup
 from orientation import Orientation, inverted_orientation_vector
 
 from dataclasses import dataclass
@@ -39,7 +39,7 @@ class PuzzleConstructorFromConfig:
 
     def construct(self):
 
-        letters: List[List[str]] = []
+        letters: Soup = []
         for i in range(config.rows):
             row = []
             for j in range(config.columns):

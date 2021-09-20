@@ -1,6 +1,6 @@
 from typing import List
 
-from puzzle import Puzzle
+from puzzle import Puzzle, Soup
 
 
 def puzzle_from_file(path: str):
@@ -11,7 +11,7 @@ def puzzle_from_file(path: str):
         for i in range(number_of_lines):
             file.readline()
 
-        lines: List[List[str]] = []
+        lines: Soup = []
 
         while True:
             line = file.readline().strip()
