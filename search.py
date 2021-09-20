@@ -1,12 +1,11 @@
+from itertools import islice
 import sys
 from typing import DefaultDict, Dict, List, Tuple, Optional
-
-from itertools import islice
 
 from puzzle import Puzzle, Cell
 from orientation import (
     Orientation,
-    generate_cells_in_direction,
+    generate_cells_for_word,
 )
 from util import puzzle_from_file, words_from_file
 
@@ -64,11 +63,9 @@ class PuzzleWordsLookup:
         # because of 1-letter "words", so position is not unbound
         position = start
 
-        for (index, position) in enumerate(
-            islice(
-                generate_cells_in_direction(start, orientation, inverted), 1, len(word)
-            ),
-            1,
+        # skip the first letter because we already know it's in the puzzle
+        for (index, position) in islice(
+            generate_cells_for_word(start, orientation, inverted, word), 1
         ):
             if not self.puzzle.in_bounds(position):
                 return None

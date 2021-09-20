@@ -35,8 +35,6 @@ def generate_cells_for_word(
     return enumerate(
         islice(
             generate_cells_in_direction(start, orientation, inverted),
-            1,
             len(word),
         ),
-        1,
     )
