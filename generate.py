@@ -33,8 +33,11 @@ def puzzle_generator_config_from_file(path: str):
 
 
 class PuzzleConstructorFromConfig:
-    @staticmethod
-    def construct_from_config(config: PuzzleGeneratorConfig) -> Optional[Puzzle]:
+    def __init__(self, config: PuzzleGeneratorConfig) -> None:
+        self.config = config
+
+    def construct(self):
+
         letters: List[List[str]] = []
         for i in range(config.rows):
             row = []
@@ -42,8 +45,8 @@ class PuzzleConstructorFromConfig:
                 row.append(" ")
             letters.append(row)
 
-        puzzle_with_words = PuzzleConstructorFromConfig._construct_from_config_helper(
-            config, Puzzle(config.rows, config.columns, letters), 0
+        puzzle_with_words = self._construct_from_config_helper(
+            Puzzle(config.rows, config.columns, letters), 0
         )
 
         # We were unable to fit all the words there
@@ -57,9 +60,8 @@ class PuzzleConstructorFromConfig:
 
         return puzzle_with_words
 
-    @staticmethod
     def _construct_from_config_helper(
-        config: PuzzleGeneratorConfig, puzzle: Puzzle, index: int
+        self, puzzle: Puzzle, index: int
     ) -> Optional[Puzzle]:
         # base case; we've added all the words we wanted to, yay!
         if index == len(config.words):
@@ -67,10 +69,8 @@ class PuzzleConstructorFromConfig:
 
         word = config.words[index]
         # print("Adding", word)
-        possible_for_this_word = (
-            PuzzleConstructorFromConfig._possible_points_with_orientation(
-                word, puzzle, config
-            )
+        possible_for_this_word = self._possible_points_with_orientation(
+            word, puzzle, config
         )
         while len(possible_for_this_word) > 0:
 
@@ -81,17 +81,13 @@ class PuzzleConstructorFromConfig:
             del possible_for_this_word[random_start_position]
 
             for orientation, inverted in orientations_and_inverted:
-                new_puzzle = PuzzleConstructorFromConfig._add_word(
+                new_puzzle = self._add_word(
                     word, puzzle, random_start_position, orientation, inverted
                 )
 
                 # print("Added", word, "Puzzle\n", new_puzzle)
 
-                final_puzzle = (
-                    PuzzleConstructorFromConfig._construct_from_config_helper(
-                        config, new_puzzle, index + 1
-                    )
-                )
+                final_puzzle = self._construct_from_config_helper(new_puzzle, index + 1)
                 # print("End", word, "Puzzle\n", final_puzzle)
 
                 if final_puzzle is not None:
@@ -100,9 +96,8 @@ class PuzzleConstructorFromConfig:
         # There's nowhere to place this :( We have failed.
         return None
 
-    @staticmethod
     def _possible_points_with_orientation(
-        word: str, puzzle: Puzzle, config: PuzzleGeneratorConfig
+        self, word: str, puzzle: Puzzle, config: PuzzleGeneratorConfig
     ) -> Dict[Tuple[int, int], List[Tuple[Orientation, bool]]]:
         start_points = {}
         for row_index in range(len(puzzle.letters)):
@@ -114,7 +109,7 @@ class PuzzleConstructorFromConfig:
                     # Sample here gets a random order of the list
                     inverted_list = random.sample([True, False], 2)
                     for inverted in inverted_list:
-                        if PuzzleConstructorFromConfig._possible_with_location_and_orientation(
+                        if self._possible_with_location_and_orientation(
                             word,
                             puzzle,
                             (row_index, letter_index),
@@ -127,8 +122,8 @@ class PuzzleConstructorFromConfig:
 
         return start_points
 
-    @staticmethod
     def _possible_with_location_and_orientation(
+        self,
         word: str,
         puzzle: Puzzle,
         location: Tuple[int, int],
@@ -152,8 +147,8 @@ class PuzzleConstructorFromConfig:
 
         return True
 
-    @staticmethod
     def _add_word(
+        self,
         word: str,
         puzzle: Puzzle,
         location: Tuple[int, int],
@@ -178,7 +173,7 @@ class PuzzleConstructorFromConfig:
 
 if __name__ == "__main__":
     config = puzzle_generator_config_from_file(sys.argv[1])
-    puzzle = PuzzleConstructorFromConfig.construct_from_config(config)
+    puzzle = PuzzleConstructorFromConfig(config).construct()
     assert puzzle, (
         f"Failed to create a puzzle with "
         f"{config.rows} * {config.columns}, words: {config.words}, orientations: {config.orientations}"
