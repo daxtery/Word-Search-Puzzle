@@ -11,12 +11,12 @@ from dataclasses import dataclass
 @dataclass
 class PuzzleWord:
     orientation: Orientation
-    is_inverted: bool
+    inverted: bool
     start: Cell
     end: Cell
 
     def __repr__(self):
-        inverted = "Inverted " if self.is_inverted else ""
+        inverted = "Inverted " if self.inverted else ""
         return f"{self.start} --> {self.end} ({inverted}{self.orientation.name})"
 
 
