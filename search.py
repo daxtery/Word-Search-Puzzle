@@ -31,8 +31,8 @@ class PuzzleWordsLookup:
         return words_in_puzzle
 
     def look_for_word(self, word: str):
-        for row_index in range(len(self.puzzle.rows)):
-            for letter_index in range(len(self.puzzle.rows[row_index])):
+        for row_index in range(len(self.puzzle.letters)):
+            for letter_index in range(len(self.puzzle.letters[row_index])):
                 if self.puzzle[(row_index, letter_index)] == word[0]:
                     for orientation in Orientation:
                         # looking in Horizontal in the "normal" way means

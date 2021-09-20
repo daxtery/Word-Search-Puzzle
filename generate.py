@@ -37,20 +37,22 @@ class PuzzleGeneratorConfigConstructor:
 class PuzzleConstructorFromConfig:
     @staticmethod
     def construct_from_config(config: PuzzleGeneratorConfig) -> Optional[Puzzle]:
-        rows: List[List[str]] = []
+        letters: List[List[str]] = []
         for i in range(config.rows):
             row = []
             for j in range(config.columns):
                 row.append(" ")
-            rows.append(row)
+            letters.append(row)
+
         puzzle_with_words = PuzzleConstructorFromConfig._construct_from_config_helper(
-            config, Puzzle(rows), 0
+            config, Puzzle(config.rows, config.columns, letters), 0
         )
+
         # We were unable to fit all the words there
         if puzzle_with_words is None:
             return puzzle_with_words
 
-        for i in range(len(puzzle_with_words.rows)):
+        for i in range(len(puzzle_with_words.letters)):
             for j in range(config.columns):
                 if puzzle_with_words[(i, j)] == " ":
                     puzzle_with_words[i, j] = random.choice(string.ascii_uppercase)
@@ -105,8 +107,8 @@ class PuzzleConstructorFromConfig:
         word: str, puzzle: Puzzle, config: PuzzleGeneratorConfig
     ) -> Dict[Tuple[int, int], List[Tuple[Orientation, bool]]]:
         start_points = {}
-        for row_index in range(len(puzzle.rows)):
-            for letter_index in range(len(puzzle.rows[row_index])):
+        for row_index in range(len(puzzle.letters)):
+            for letter_index in range(len(puzzle.letters[row_index])):
                 # Sample here gets a random order of the list
                 for orientation in random.sample(
                     config.orientations, len(config.orientations)

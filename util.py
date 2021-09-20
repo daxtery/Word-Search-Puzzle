@@ -10,7 +10,9 @@ def puzzle_from_file(path: str):
         # which we do not care about
         for i in range(number_of_lines):
             file.readline()
+
         lines: List[List[str]] = []
+
         while True:
             line = file.readline().strip()
             if line == "":
@@ -19,7 +21,8 @@ def puzzle_from_file(path: str):
             for character in line.split(" "):
                 row.append(character)
             lines.append(row)
-        return Puzzle(lines)
+
+        return Puzzle(len(lines), len(lines[0]), lines)
 
 
 def words_from_file(path: str) -> List[str]:

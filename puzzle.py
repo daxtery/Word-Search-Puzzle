@@ -7,25 +7,27 @@ Cell = Tuple[Row, Column]
 
 
 class Puzzle:
-    def __init__(self, rows: List[List[str]]):
+    def __init__(self, rows: int, columns: int, letters: List[List[str]]):
+        self.letters = letters
         self.rows = rows
+        self.columns = columns
 
     def __getitem__(self, key: Cell):
-        return self.rows[key[0]][key[1]]
+        return self.letters[key[0]][key[1]]
 
     def __setitem__(self, key: Cell, value: str):
-        self.rows[key[0]][key[1]] = value
+        self.letters[key[0]][key[1]] = value
 
     def in_bounds(self, cell: Cell):
         row, column = cell
-        return 0 <= row < len(self.rows) and 0 <= column < len(self.rows[row])
+        return 0 <= row < self.rows and 0 <= column < self.columns
 
     def __copy__(self):
-        return Puzzle(self.rows.copy())
+        return Puzzle(self.rows, self.columns, self.letters.copy())
 
     def __repr__(self):
         parts = []
-        for row in self.rows:
+        for row in self.letters:
             line = []
             for c in row:
                 line.append(c)
