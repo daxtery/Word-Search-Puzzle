@@ -5,25 +5,19 @@ from puzzle import Puzzle, Cell
 from orientation import Orientation, inverted_orientation_vector
 from util import puzzle_from_file, words_from_file
 
+from dataclasses import dataclass
 
+
+@dataclass
 class PuzzleWord:
-    def __init__(
-        self,
-        word: str,
-        orientation: Orientation,
-        is_inverted: bool,
-        start: Cell,
-        end: Cell,
-    ):
-        self.word = word
-        self.is_inverted = is_inverted
-        self.end = end
-        self.start = start
-        self.orientation = orientation
+    orientation: Orientation
+    is_inverted: bool
+    start: Cell
+    end: Cell
 
     def __repr__(self):
-        inverted = "(Inverted)" if self.is_inverted else ""
-        return f"{self.word} {self.start} -[{self.orientation}{inverted}]-> {self.end}"
+        inverted = "Inverted " if self.is_inverted else ""
+        return f"{self.start} --> {self.end} ({inverted}{self.orientation.name})"
 
 
 class PuzzleWordsLookup:
@@ -31,10 +25,9 @@ class PuzzleWordsLookup:
         self.words = words
         self.puzzle = puzzle
 
-    def resolve(self) -> List[Optional[PuzzleWord]]:
-        words_in_puzzle = []
-        for word in self.words:
-            words_in_puzzle.append(self.look_for_word(word))
+    def resolve(self):
+        words_in_puzzle = {word: self.look_for_word(word) for word in self.words}
+
         return words_in_puzzle
 
     def look_for_word(self, word: str) -> Optional[PuzzleWord]:
@@ -42,7 +35,6 @@ class PuzzleWordsLookup:
             for letter_index in range(len(self.puzzle.rows[row_index])):
                 if self.puzzle[(row_index, letter_index)] == word[0]:
                     for orientation in Orientation:
-                        # look in the "normal way": for example:
                         # looking in Horizontal in the "normal" way means
                         # we look -->
                         found = self.look_for_word_with_orientation(
@@ -50,14 +42,12 @@ class PuzzleWordsLookup:
                         )
                         if found is not None:
                             return PuzzleWord(
-                                word,
                                 orientation,
                                 False,
                                 (row_index, letter_index),
                                 found,
                             )
 
-                        # look in the "inverted way"
                         # while in the "inverted way"
                         # we look <--
                         found = self.look_for_word_with_orientation(
@@ -65,15 +55,12 @@ class PuzzleWordsLookup:
                         )
                         if found is not None:
                             return PuzzleWord(
-                                word,
                                 orientation,
                                 True,
                                 (row_index, letter_index),
                                 found,
                             )
 
-        # fuck
-        print(f"Could not find '{word}'")
         return None
 
     def look_for_word_with_orientation(
@@ -91,10 +78,6 @@ class PuzzleWordsLookup:
         current_index = 1
         current_position = 0, 0
 
-        # print("\n\n")
-        # print("start", start, "word", word, "orientation", orientation, "inverted", inverted)
-        # print("\n\n")
-
         while current_index < len(word):
             current_position = (
                 start[0] + current_index * change_vector[0],
@@ -105,7 +88,6 @@ class PuzzleWordsLookup:
                 return None
 
             car = self.puzzle[current_position]
-            # print(current_position, "character", car, "index", current_index, "word[index]", word[current_index])
 
             if car != word[current_index]:
                 return None
