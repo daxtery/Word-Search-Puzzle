@@ -17,11 +17,22 @@ class PuzzleWord:
     orientation: Orientation
     inverted: bool
     start: Cell
-    end: Cell
+    word: str
 
     def __repr__(self):
+        positions = ",".join(
+            map(
+                str,
+                map(
+                    lambda pair: pair[1],
+                    generate_cells_for_word(
+                        self.start, self.orientation, self.inverted, self.word
+                    ),
+                ),
+            )
+        )
         inverted = "Inverted " if self.inverted else ""
-        return f"{self.start} --> {self.end} ({inverted}{self.orientation.name})"
+        return f"[{positions}] ({inverted}{self.orientation.name})"
 
 
 class PuzzleWordsLookup:
@@ -41,16 +52,15 @@ class PuzzleWordsLookup:
                 if self.puzzle[cell] == word[0]:
                     for orientation in Orientation:
                         for inverted in [True, False]:
-                            found = self.try_look_for_word_with_orientation(
-                                word, cell, orientation, inverted
-                            )
 
-                            if found is not None:
+                            if self.try_look_for_word_with_orientation(
+                                word, cell, orientation, inverted
+                            ):
                                 return PuzzleWord(
                                     orientation,
                                     inverted,
-                                    (row_index, letter_index),
-                                    found,
+                                    cell,
+                                    word,
                                 )
 
     def try_look_for_word_with_orientation(
@@ -60,20 +70,17 @@ class PuzzleWordsLookup:
         orientation: Orientation,
         inverted: bool,
     ):
-        # because of 1-letter "words", so position is not unbound
-        position = start
-
         # skip the first letter because we already know it's in the puzzle
         for (index, position) in islice(
-            generate_cells_for_word(start, orientation, inverted, word), 1
+            generate_cells_for_word(start, orientation, inverted, word), 1, None
         ):
             if not self.puzzle.in_bounds(position):
-                return None
+                return False
 
             if self.puzzle[position] != word[index]:
-                return None
+                return False
 
-        return position
+        return True
 
 
 class PuzzleWordsLookupWithCache(PuzzleWordsLookup):
@@ -94,21 +101,15 @@ class PuzzleWordsLookupWithCache(PuzzleWordsLookup):
         for cell in self.first_letters_locations[word[0]]:
             for orientation in Orientation:
                 for inverted in [True, False]:
-                    found = self.try_look_for_word_with_orientation(
-                        word, cell, orientation, inverted
-                    )
 
-                    if found is not None:
-                        return PuzzleWord(
-                            orientation,
-                            inverted,
-                            cell,
-                            found,
-                        )
+                    if self.try_look_for_word_with_orientation(
+                        word, cell, orientation, inverted
+                    ):
+                        return PuzzleWord(orientation, inverted, cell, word)
 
 
 if __name__ == "__main__":
-    sys.argv = ["", "search_tests/2cheias.txt"]
+    # sys.argv = ["", "search_tests/4.txt"]
     puzzle = puzzle_from_file(sys.argv[1])
     words = words_from_file(sys.argv[1])
     words_list = "\n".join([word for word in words])
