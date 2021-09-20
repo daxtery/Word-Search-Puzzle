@@ -11,6 +11,7 @@ from util import puzzle_from_file, words_from_file
 
 from dataclasses import dataclass
 
+import pprint
 
 @dataclass
 class PuzzleWord:
@@ -113,6 +114,6 @@ if __name__ == "__main__":
     puzzle = puzzle_from_file(sys.argv[1])
     words = words_from_file(sys.argv[1])
     words_list = "\n".join([word for word in words])
-    print(words_list)
-    print(puzzle)
-    print(PuzzleWordsLookupWithCache(words, puzzle).resolve())
+    # print(words_list)
+    # print(puzzle)
+    pprint.pprint(PuzzleWordsLookupWithCache(words, puzzle).resolve())
