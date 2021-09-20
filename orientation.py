@@ -1,4 +1,5 @@
 from enum import Enum
+from itertools import islice
 from typing import Tuple
 
 
@@ -26,3 +27,16 @@ def generate_cells_in_direction(
         yield x, y
         x += dx
         y += dy
+
+
+def generate_cells_for_word(
+    start: Tuple[int, int], orientation: Orientation, inverted: bool, word: str
+):
+    return enumerate(
+        islice(
+            generate_cells_in_direction(start, orientation, inverted),
+            1,
+            len(word),
+        ),
+        1,
+    )
