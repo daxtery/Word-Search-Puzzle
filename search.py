@@ -1,5 +1,5 @@
 import sys
-from typing import List, Tuple, Optional
+from typing import DefaultDict, Dict, List, Tuple, Optional
 
 from itertools import islice
 
@@ -79,6 +79,37 @@ class PuzzleWordsLookup:
         return position
 
 
+class PuzzleWordsLookupWithCache(PuzzleWordsLookup):
+    def __init__(self, words: List[str], puzzle: Puzzle):
+        super().__init__(words, puzzle)
+        self.first_letters_locations: Dict[str, List[Cell]] = DefaultDict(list)
+
+    def resolve(self):
+        for row_index in range(self.puzzle.rows):
+            for letter_index in range(self.puzzle.columns):
+                cell = (row_index, letter_index)
+                self.first_letters_locations[puzzle[cell]].append(cell)
+
+        words_in_puzzle = {word: self.look_for_word(word) for word in self.words}
+        return words_in_puzzle
+
+    def look_for_word(self, word: str):
+        for cell in self.first_letters_locations[word[0]]:
+            for orientation in Orientation:
+                for inverted in [True, False]:
+                    found = self.try_look_for_word_with_orientation(
+                        word, cell, orientation, inverted
+                    )
+
+                    if found is not None:
+                        return PuzzleWord(
+                            orientation,
+                            inverted,
+                            cell,
+                            found,
+                        )
+
+
 if __name__ == "__main__":
     sys.argv = ["", "search_tests/2cheias.txt"]
     puzzle = puzzle_from_file(sys.argv[1])
@@ -86,4 +117,4 @@ if __name__ == "__main__":
     words_list = "\n".join([word for word in words])
     print(words_list)
     print(puzzle)
-    print(PuzzleWordsLookup(words, puzzle).resolve())
+    print(PuzzleWordsLookupWithCache(words, puzzle).resolve())
