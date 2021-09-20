@@ -13,3 +13,16 @@ class Orientation(Enum):
 
 def inverted_orientation_vector(orientation: Orientation):
     return -orientation.value[0], -orientation.value[1]
+
+
+def generate_cells_in_direction(
+    start: Tuple[int, int], orientation: Orientation, inverted: bool
+):
+    x, y = start
+    dx, dy = (
+        orientation.value if not inverted else inverted_orientation_vector(orientation)
+    )
+    while True:
+        yield x, y
+        x += dx
+        y += dy
