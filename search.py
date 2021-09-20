@@ -1,8 +1,13 @@
 import sys
 from typing import List, Tuple, Optional
 
+from itertools import islice
+
 from puzzle import Puzzle, Cell
-from orientation import Orientation, inverted_orientation_vector
+from orientation import (
+    Orientation,
+    generate_cells_in_direction,
+)
 from util import puzzle_from_file, words_from_file
 
 from dataclasses import dataclass
@@ -31,70 +36,51 @@ class PuzzleWordsLookup:
         return words_in_puzzle
 
     def look_for_word(self, word: str):
-        for row_index in range(len(self.puzzle.letters)):
-            for letter_index in range(len(self.puzzle.letters[row_index])):
-                if self.puzzle[(row_index, letter_index)] == word[0]:
+        for row_index in range(self.puzzle.rows):
+            for letter_index in range(self.puzzle.columns):
+                cell = (row_index, letter_index)
+                if self.puzzle[cell] == word[0]:
                     for orientation in Orientation:
-                        # looking in Horizontal in the "normal" way means
-                        # we look -->
-                        found = self.look_for_word_with_orientation(
-                            word, (row_index, letter_index), orientation, False
-                        )
-                        if found is not None:
-                            return PuzzleWord(
-                                orientation,
-                                False,
-                                (row_index, letter_index),
-                                found,
+                        for inverted in [True, False]:
+                            found = self.try_look_for_word_with_orientation(
+                                word, cell, orientation, inverted
                             )
 
-                        # while in the "inverted way"
-                        # we look <--
-                        found = self.look_for_word_with_orientation(
-                            word, (row_index, letter_index), orientation, True
-                        )
-                        if found is not None:
-                            return PuzzleWord(
-                                orientation,
-                                True,
-                                (row_index, letter_index),
-                                found,
-                            )
+                            if found is not None:
+                                return PuzzleWord(
+                                    orientation,
+                                    inverted,
+                                    (row_index, letter_index),
+                                    found,
+                                )
 
-    def look_for_word_with_orientation(
+    def try_look_for_word_with_orientation(
         self,
         word: str,
         start: Tuple[int, int],
         orientation: Orientation,
         inverted: bool,
     ):
-        change_vector = (
-            inverted_orientation_vector(orientation) if inverted else orientation.value
-        )
+        # because of 1-letter "words", so position is not unbound
+        position = start
 
-        current_index = 1
-        current_position = 0, 0
-
-        while current_index < len(word):
-            current_position = (
-                start[0] + current_index * change_vector[0],
-                start[1] + current_index * change_vector[1],
-            )
-
-            if not self.puzzle.in_bounds(current_position):
+        for (index, position) in enumerate(
+            islice(
+                generate_cells_in_direction(start, orientation, inverted), 1, len(word)
+            ),
+            1,
+        ):
+            if not self.puzzle.in_bounds(position):
                 return None
 
-            car = self.puzzle[current_position]
-
-            if car != word[current_index]:
+            if self.puzzle[position] != word[index]:
                 return None
 
-            current_index += 1
-
-        return current_position
+        return position
 
 
 if __name__ == "__main__":
+    sys.argv = ["", "search_tests/2cheias.txt"]
     puzzle = puzzle_from_file(sys.argv[1])
     words = words_from_file(sys.argv[1])
     words_list = "\n".join([word for word in words])
